@@ -12,7 +12,12 @@ class Dish(models.Model):
 
     name = models.CharField(max_length=60)
     description = models.TextField(max_length=1000, blank=True)
-    photo = models.URLField(max_length=1000, blank=True)  # link
+
+
+class Gallery(models.Model):
+
+    image = models.FileField(upload_to='gallery')
+    dish = models.ForeignKey(Dish, on_delete=models.CASCADE, related_name='images')
 
 
 class DishInDiet(models.Model):
