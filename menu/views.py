@@ -1,12 +1,10 @@
-from datetime import date, timedelta
+from datetime import date
 
-from django.shortcuts import render
-from django.core import serializers
-from rest_framework import generics, views, viewsets, status
+from rest_framework import views, status
 from rest_framework.response import Response
 from rest_framework.permissions import IsAuthenticated
 
-from .models import Dish, DishInDiet, Meal, Ingredients
+from .models import Dish, DishInDiet, Meal
 from .serializers import DishInDietSerializer, DishSerializer, MealSerializer
 
 
@@ -31,7 +29,7 @@ class TodayCaloriesView(views.APIView):
 
     def get(self, request):
         user = self.request.user
-        dishes = DishInDiet.objects.filter(meals__user=user).filter(meals__date_created__gt=date.today() - timedelta(days=1))
+        dishes = DishInDiet.objects.filter(meals__user=user).filter(meals__date_created__gte=date.today())
         calories = sum([dish.get_calories() for dish in dishes])
         return Response({'calories': calories}, status=status.HTTP_200_OK)
 
